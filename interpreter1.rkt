@@ -1,5 +1,6 @@
 ; Vanessa Melikian, Vishal Shah, Catherine Tsuei
 
+(require "simpleParser.scm")
 ; Unary operator??
 
 ; takes an arithmetic expression and returns the value
@@ -40,7 +41,7 @@
 
 ; takes a logical expression and returns the boolean result
 (define MBoolLogicOperators?
-  (lambda (logicExpression)
+  (lambda (logicExpressio
     (cond
       ((eq? '#t logicExpression) #t)
       ((eq? '#f logicExpression) #f)
@@ -60,5 +61,58 @@
     (if (null? statementlist)
         state
         (MStateStatementList (cdr statementlist) (MState (car statementlist) state)))))
+
+
+
+
+(define MState
+  (lambda (expression state)
+    (cond
+      ((eq? '= (operator expression)) ((MAssign 
+
+
+
+; binding pairs --> "state"
+; variable declaration (var variable) or (var variable value)
+
+; returns the variable of an expression
+(define var cadr)
+
+; returns the value of an expression
+(define value caddr)
+  
+; assignment (= variable expression)
+  (define MAssign
+    (lambda (expression state)
+      (cond
+        (Mstate (var expression)
+       (eq? '= (operator expression))
+          (MBinding (var expression) (value expression) state)
+      (else (error 'badop "Undefined operator"))))
+  
+; return (return expression)
+  (define return
+    (lambda (var state)
+      (if (null? MValue(var state))
+          (error 'undef "undeclared variable")
+          (MValue(var state)))))
+; if (if conditional then-statement optional-else-statement)
+; while (while conditional body-statement)
+   
+
+  (define MStatement
+  (lambda (statement state)
+    (if (null? statement)
+        state
+        (MState(statement state)))))
+
+  (define MStatement
+    (lambda (var '=' val state)
+     ( if (null? statement)
+          state
+          ((remove (Mvalue(var) state) (add (Mvalue(var) Mvalue(val) state)))))))
+
+  (define add
+    (lambda (name state)
 
 
