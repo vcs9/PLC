@@ -26,7 +26,6 @@
 ; returns the second operand of an expression
 (define operand2 caddr)
 
-; TODO: make sure that variables can work here
 ; takes a comparative expression and returns the boolean result
 (define MBoolComparison?
   (lambda (comparison)
@@ -40,7 +39,6 @@
       ((eq? '>= (operator comparison)) (>= (MValueComparison? (operand1 comparison)) (MValueComparison? (operand2 comparison))))
       (else (error 'badop "Undefined operator")))))
 
-; TODO: no numbers allowed, make sure expressions have true/false values
 ; takes a logical expression and returns the boolean result
 (define MBoolLogicOperators?
   (lambda (logicExpressio
