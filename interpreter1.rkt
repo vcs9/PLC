@@ -68,7 +68,8 @@
 (define MState
   (lambda (expression state)
     (cond
-      ((eq? '= (operator expression)) ((MAssign 
+      ((eq? '= (operator expression)) ((MAssign (var expression) (value expression) state)))
+      
 
 
 
@@ -86,14 +87,15 @@
     (lambda (expression state)
       (cond
         (Mstate (var expression)
-       (eq? '= (operator expression))
+       (eq? '= (operator expression)) ; may not need it based on the = check in MState
           (MBinding (var expression) (value expression) state)
       (else (error 'badop "Undefined operator"))))
   
 ; return (return expression)
   (define return
     (lambda (var state)
-      (if (null? MValue(var state))
+      (cond
+        ((null? MValue(var state))
           (error 'undef "undeclared variable")
           (MValue(var state)))))
 ; if (if conditional then-statement optional-else-statement)
