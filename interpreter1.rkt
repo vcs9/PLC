@@ -116,33 +116,7 @@
           state
           ((remove (Mvalue(var) state) (add (Mvalue(var) Mvalue(val) state)))))))
 
-(define add
-  (lambda (x y lis)
-    (list (cons x (car lis)) (cons y (car (cdr lis))))))
-; (add 'c 'd '((a b) (e f))) -> ((c a b) (d e f))
-
-;lookup
-(define lookup?
-  (lambda (x variables)
-    (cond
-      ((null? (cdr variables)) #f)
-      ((equal? x (car variables)) #t)
-      (else (lookup? x (cdr variables))))))
-;(lookup? 'a '(b c d a q w e r))
-
-; value of the variable
-(define valueOfVariable
-  (lambda (var variables values)
-    (if (eq? var (car variables))
-             (car values)
-             (valueOfVariable var (cdr variables) (cdr values)))))
-
-;remove
-(define myRemove
-  (lambda (x variables values)
-    (cond
-      ((null? variables) (list variables values))
-      ((equal? x (car variables)) (list (cdr variables) (cdr values)))
-      (else (list (cons (car variables) (car (myRemove x (cdr variables) (cdr values)))) (cons (car values) (car (cdr (myRemove x (cdr variables) (cdr values)))))))))) 
+  (define add
+    (lambda (name state)
 
 
