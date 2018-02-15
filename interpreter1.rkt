@@ -1,6 +1,6 @@
 ; Vanessa Melikian, Vishal Shah, Catherine Tsuei
 
-(require "simpleParser.scm")
+(load "simpleParser.scm")
 ; Unary operator??
 
 ; takes an arithmetic expression and returns the value
@@ -43,7 +43,7 @@
 ; TODO: no numbers allowed, make sure expressions have true/false values
 ; takes a logical expression and returns the boolean result
 (define MBoolLogicOperators?
-  (lambda (logicExpressio
+  (lambda (logicExpression)
     (cond
       ((eq? '#t logicExpression) #t)
       ((eq? '#f logicExpression) #f)
@@ -70,7 +70,7 @@
 (define MState
   (lambda (expression state)
     (cond
-      ((eq? '= (operator expression)) ((MAssign (var expression) (value expression) state)))
+      ((eq? '= (operator expression)) ((MAssign (var expression) (value expression) state))))))
       
 
 
@@ -83,23 +83,32 @@
 
 ; returns the value of an expression
 (define value caddr)
+
+; returns the variable list of the state
+(define variableList car)
+
+; returns the value list of the state
+(define valueList cdr)
   
 ; assignment (= variable expression)
-  (define MAssign
-    (lambda (expression state)
-      (cond
-        (Mstate (var expression)
-       (eq? '= (operator expression)) ; may not need it based on the = check in MState
-          (MBinding (var expression) (value expression) state)
-      (else (error 'badop "Undefined operator"))))
+(define MAssign
+  (lambda (expression state)
+    (cond
+      ((lookup? (var expression) (variableList state))
+       (add (var expression) (value expression) (myRemove (var expression) (variableList state) (valueList state))))
+      (else (error 'undeclaredVariable "This variable has not been declared")))))
+       
+  ;      (Mstate (var expression)
+  ;     (eq? '= (operator expression)) ; may not need it based on the = check in MState
+  ;        (MBinding (var expression) (value expression) state)
   
-; return (return expression)
+; return (return expression) -FIX THIS
   (define return
     (lambda (var state)
       (cond
         ((null? MValue(var state))
           (error 'undef "undeclared variable")
-          (MValue(var state)))))
+          (MValue(var state))))))
 ; if (if conditional then-statement optional-else-statement)
 ; while (while conditional body-statement)
    
@@ -110,24 +119,24 @@
         state
         (MState(statement state)))))
 
-  (define MStatement
-    (lambda (var '=' val state)
-     ( if (null? statement)
-          state
-          ((remove (Mvalue(var) state) (add (Mvalue(var) Mvalue(val) state)))))))
+  ;(define MStatement
+   ; (lambda (var '= val state)
+    ; ( if (null? statement)
+     ;     state
+      ;    ((remove (Mvalue(var) state) (add (Mvalue(var) Mvalue(val) state)))))))
 
 (define add
-  (lambda (x y lis)
-    (list (cons x (car lis)) (cons y (car (cdr lis))))))
+  (lambda (variable value state)
+    (list (cons variable (car state)) (cons value (car (cdr state))))))
 ; (add 'c 'd '((a b) (e f))) -> ((c a b) (d e f))
 
 ;lookup
 (define lookup?
-  (lambda (x variables)
+  (lambda (variable variables)
     (cond
       ((null? (cdr variables)) #f)
-      ((equal? x (car variables)) #t)
-      (else (lookup? x (cdr variables))))))
+      ((equal? variable (car variables)) #t)
+      (else (lookup? variable (cdr variables))))))
 ;(lookup? 'a '(b c d a q w e r))
 
 ; value of the variable
@@ -139,10 +148,10 @@
 
 ;remove
 (define myRemove
-  (lambda (x variables values)
+  (lambda (variable variables values)
     (cond
       ((null? variables) (list variables values))
-      ((equal? x (car variables)) (list (cdr variables) (cdr values)))
-      (else (list (cons (car variables) (car (myRemove x (cdr variables) (cdr values)))) (cons (car values) (car (cdr (myRemove x (cdr variables) (cdr values)))))))))) 
+      ((equal? variable (car variables)) (list (cdr variables) (cdr values)))
+      (else (list (cons (car variables) (car (myRemove variable (cdr variables) (cdr values)))) (cons (car values) (car (cdr (myRemove variable (cdr variables) (cdr values)))))))))) 
 
 
